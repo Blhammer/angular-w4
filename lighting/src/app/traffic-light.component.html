@@ -1,0 +1,23 @@
+<div class="traffic-light">
+  <div
+    class="light"
+    [ngClass]="{ red: currentColor === 'red', off: currentColor !== 'red' }"
+  ></div>
+  <div
+    class="light"
+    [ngClass]="{
+      yellow: currentColor === 'yellow',
+      off: currentColor !== 'yellow'
+    }"
+  ></div>
+  <div
+    class="light"
+    [ngClass]="{
+      green: currentColor === 'green',
+      off: currentColor !== 'green'
+    }"
+  ></div>
+  <button [disabled]="currentColor === 'red'" (click)="onCross()">
+    Пресичане
+  </button>
+</div>

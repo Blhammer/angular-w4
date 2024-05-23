@@ -1,0 +1,44 @@
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  position: relative;
+}
+
+.traffic-lights.horizontal {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  left: 0;
+}
+
+.traffic-lights.horizontal.top {
+  top: 10px;
+}
+
+.traffic-lights.horizontal.bottom {
+  bottom: 10px;
+}
+
+.traffic-lights.vertical {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  height: 100%;
+  flex-direction: column;
+}
+
+.traffic-lights.vertical.left {
+  left: 10px;
+}
+
+.traffic-lights.vertical.right {
+  right: 10px;
+}
+
+app-emergency-button {
+  position: absolute;
+  bottom: 20px;
+}
