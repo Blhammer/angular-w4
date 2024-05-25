@@ -1,15 +1,23 @@
 .traffic-light {
-  width: 70px;
-  height: 160px;
-  margin: 10px;
   display: flex;
-  flex-direction: column;
   justify-content: space-around;
   align-items: center;
   border: 2px solid black;
   border-radius: 10px;
   background-color: #333;
   padding: 10px;
+}
+
+.traffic-light.horizontal {
+  flex-direction: row;
+  width: 130px;
+  height: 40px;
+}
+
+.traffic-light.vertical {
+  flex-direction: column;
+  width: 40px;
+  height: 130px;
 }
 
 .light {
@@ -36,17 +44,22 @@
 }
 
 button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  font-size: 10px;
-  background-color: red;
+  padding: 5px 5px;
+  font-size: 15px;
+  background-color: orange;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 5px;
 }
 
 button:disabled {
   background-color: gray;
   cursor: not-allowed;
+}
+
+.order {
+  display: flex;
+  align-items: center;
 }

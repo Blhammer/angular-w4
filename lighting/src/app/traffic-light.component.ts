@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { interval, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { SharedService } from './SharedService.component';
 
 @Component({
   selector: 'app-traffic-light',
@@ -11,41 +12,80 @@ import { interval, Subscription } from 'rxjs';
 })
 export class TrafficLightComponent implements OnInit, OnDestroy {
   @Input() position: 'horizontal' | 'vertical' = 'horizontal';
-  public currentColor: 'red' | 'yellow' | 'green' = 'red';
-  private timerSubscription: Subscription | null = null;
+  public currentColor: 'red' | 'yellow' | 'green' | 'none' = 'none';
+  private emergencySubscription: Subscription | null = null;
+  private isYellowVisible: boolean = false;
+
+  constructor(private sharedService: SharedService) {}
 
   ngOnInit(): void {
     this.startCycle();
+    this.emergencySubscription = this.sharedService
+      .getEmergencyTrigger()
+      .subscribe(() => {
+        this.initiateEmergency();
+      });
   }
 
-  startCycle(): void {
+  public ngOnDestroy(): void {
+    if (this.emergencySubscription) {
+      this.emergencySubscription.unsubscribe();
+    }
+  }
+
+  private startCycle(): void {
     const redDuration = 5000;
     const yellowDuration = 2000;
     const greenDuration = 5000;
 
-    const cycle$ = interval(
-      redDuration + yellowDuration + greenDuration
-    ).subscribe(() => {
-      this.currentColor = 'red';
-      setTimeout(() => (this.currentColor = 'yellow'), redDuration);
-      setTimeout(
-        () => (this.currentColor = 'green'),
-        redDuration + yellowDuration
-      );
-    });
+    this.currentColor = 'none';
 
-    this.timerSubscription = cycle$;
+    setTimeout(() => {
+      this.currentColor = 'yellow';
+      setTimeout(() => {
+        this.currentColor = 'green';
+        setTimeout(() => {
+          this.currentColor = 'yellow';
+          setTimeout(() => {
+            this.currentColor = 'red';
+          }, yellowDuration);
+        }, greenDuration);
+      }, yellowDuration);
+    }, redDuration);
   }
 
-  ngOnDestroy(): void {
-    if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe();
-    }
+  private stopCycle(): void {
+    this.currentColor = 'none';
   }
 
-  onCross() {
+  public onCross() {
     if (this.currentColor === 'yellow') {
-      alert('Неправилно пресичане');
+      alert('РќРµРїСЂР°РІРёР»РЅРѕ РїСЂРµСЃРёС‡Р°РЅРµ');
     }
+  }
+
+  public initiateEmergency(): void {
+    this.stopCycle();
+    const blinkDuration = 1000;
+    const totalDuration = 10000;
+
+    let elapsedTime = 0;
+
+    const blinkInterval = setInterval(() => {
+      if (this.isYellowVisible) {
+        this.currentColor = 'none';
+      } else {
+        this.currentColor = 'yellow';
+      }
+      this.isYellowVisible = !this.isYellowVisible;
+      elapsedTime += blinkDuration;
+
+      if (elapsedTime >= totalDuration) {
+        clearInterval(blinkInterval);
+        this.currentColor = 'none';
+      }
+    }, blinkDuration);
+
+    this.startCycle();
   }
 }

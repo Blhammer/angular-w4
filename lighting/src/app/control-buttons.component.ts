@@ -7,12 +7,15 @@ import { Component, Input } from '@angular/core';
   standalone: true,
 })
 export class ControlButtonsComponent {
-  @Input() position: 'horizontal' | 'vertical' = 'horizontal';
   @Input() lightColor: 'red' | 'yellow' | 'green' = 'red';
+
+  isCrossButtonDisabled(): boolean {
+    return this.lightColor === 'red';
+  }
 
   onCross(): void {
     if (this.lightColor === 'yellow') {
-      alert('Неправилно пресичане');
+      alert('РќРµРїСЂР°РІРёР»РЅРѕ РїСЂРµСЃРёС‡Р°РЅРµ');
     }
   }
 }
